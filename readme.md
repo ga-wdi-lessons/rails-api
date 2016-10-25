@@ -14,6 +14,8 @@
   <!-- Fix comment show view and controller in starter. Added to solution -->
   <!-- Make a note of using Postman without .json -- retrieve an html page accidentally -->
   <!-- Note that we can see the result of Postman requests in the tab running the rails server -->
+  <!-- Clarify "Add a Content-Type header set to application/json" -->
+  <!-- Add flash to Rails app -->
 
 # APIs
 
@@ -228,9 +230,9 @@ Let's walk through the same process for `Grumbles#index`.
 
 </details>
 
-Demonstrate in browser and Postman.
+> Demonstrate in browser and Postman.
 
-### You Do: Comments#index and Comments#show (15 minutes / 0:55)
+## You Do: Comments#index and Comments#show (15 minutes / 0:55)
 
 > 10 minutes exercise. 5 minute review.
 
@@ -373,8 +375,6 @@ The raw response from this request is an error page, rendered as html. Sometimes
 
 Additionally we can preview the html, and see a familiar rails error page.
 
-<!-- AM: Indicate where the "preview" option is -->
-
 Ah yes. Rails uses an Authenticity token for security. It will provide it for any request made within a form it renders. Postman is decidedly not that. Let's temporarily adjust that setting for testing purposes. When we go back to using html forms, we can set it back.
 
 In our `application_controller.rb` we must adjust the way Rails protects us by default:
@@ -403,7 +403,54 @@ We should now get a `200` response code signifying a successful `POST` request a
 
 Your turn. Make sure we can create and update Comments via requests that expect JSON.
 
-## Accessing Our API With Angular
+<details>
+  <summary><strong>Solution...</strong></summary>
+
+  > Here's a sample new comment if you want to use it.
+
+  ```json
+  {
+  	"comment": {
+  		"authorName": "Bobby",
+  		"content": "Wow, such comment"
+  	}
+  }
+  ```
+
+  ```rb
+  # comments_controller.rb
+
+  def create
+    @grumble = Grumble.find(params[:grumble_id])
+    @comment = @grumble.comments.new(comment_params)
+
+    respond_to do |format|
+      if @comment.save!
+        format.html { redirect_to @grumble, notice: 'Comment was successfully created.' }
+        format.json { render json: @comment, status: :created }
+      else
+        format.html { render :new }
+        format.json { render json: @comment.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def update
+    @grumble = Grumble.find(params[:grumble_id])
+    @comment = Comment.find(params[:id])
+
+    respond_to do |format|
+      if @comment.update!(comment_params)
+        format.html { redirect_to @comment, notice: 'Comment was successfully updated.' }
+        format.json { render json: @comment }
+      else
+        format.html { render :new }
+        format.json { render json: @comment.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+  ```
+</details>
 
 ## Conclusion
 
