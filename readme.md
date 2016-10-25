@@ -1,7 +1,6 @@
-<!-- TODOs -->
-  <!-- Update screenshots -->
-  <!-- Introduce "include" -->
-  <!-- What is the update version of `status: :created` -->
+<!-- Update screenshots -->
+<!-- Introduce "include" -->
+<!-- What is the update version of `status: :created` -->
 
 # APIs
 
@@ -13,6 +12,8 @@
 - Use an external API (via HTTParty) to gather data and utilize it in a Rails application
 
 ## Framing
+
+Yesterday afternoon you learned how to use Angular and `ngResource` to communicate with an API. In particular, you performed CRUD actions on a Grumblr API the instructors made for you. This morning you will learn how to build a Rails API from the ground up and create a back-end that serves up JSON along with the usual HTML views.
 
 ## A Quick Refresher (5 minutes / 0:05)
 
