@@ -1,21 +1,7 @@
 <!-- TODOs -->
   <!-- Update screenshots -->
   <!-- Introduce "include" -->
-  <!-- Have students code along all the way through? -->
-  <!-- Need more bonuses -->
-  <!-- Update repo title and rename the other one -->
-  <!-- Figure out routes for comments index - nested or no? -->
-  <!-- Make sure comment create/update uses new-save paradigm -->
-  <!-- Add you do solutions -->
-  <!-- Add a "NO COPY PASTING" warning -->
-  <!-- Make sure update actions are two-tiered -->
   <!-- What is the update version of `status: :created` -->
-  <!-- What about DELETE? -->
-  <!-- Fix comment show view and controller in starter. Added to solution -->
-  <!-- Make a note of using Postman without .json -- retrieve an html page accidentally -->
-  <!-- Note that we can see the result of Postman requests in the tab running the rails server -->
-  <!-- Clarify "Add a Content-Type header set to application/json" -->
-  <!-- Add flash to Rails app -->
 
 # APIs
 
@@ -40,7 +26,7 @@
 <details>
   <summary><strong>How can we go about accessing an API programmatically?</strong></summary>
 
-  > Using jQuery's AJAX method (or an equivalent).
+  > Using jQuery's AJAX method, Angular's ngResource or some other equivalent.
 
 </details>
 
@@ -97,7 +83,8 @@ Let's demonstrate using Grumblr. Clone down this [starter code](https://github.c
 
 ```bash
 $ git clone git@github.com:ga-wdi-exercises/grumblr_rails_api.git
-$ git checkout -b wdi12-starter
+$ cd grumblr_rails_api
+$ git checkout wdi12-starter
 ```
 
 Earlier we used an HTTP request to retrieve information from a 3rd party API. Under the hood, that API received a GET request in the exact same way that the Rails application we have build in class thus far have received GET requests.
@@ -267,11 +254,13 @@ It's your turn to do the same for Comments. You should be working in `songs_cont
 
 </details>
 
+> No copy-pasting!
+
 #### Bonus
 
 * Make it so that the JSON request to Comments#show only return `authorName`, `content`, `title` and `photoUrl`. No `created_at` or `updated_at`.
 * Make it so that the JSON request to Comments#show also includes the grumble.
-* Make it so that the artists received from JSON requests to Grumbles#index and Grumbels#show also include their comments
+* Make it so that the artists received from JSON requests to Grumbles#index and Grumbles#show also include their comments
 
 > All of these will require some Googling.
 
@@ -345,7 +334,7 @@ How do we usually test this functionality in the browser? A form!
 Today, we'll use Postman. It makes POSTing requests easy.
   1. Enter url: `localhost:3000/grumbles`  
   2. Method: POST  
-  3. Add a `Content-Type` header set to `application/json`
+  3. Under the "Headers" tab, add a `Content-Type` key with a value of `application/json`
   3. Add your Grumble data to "Request Body".  
     ```json
     {
@@ -389,8 +378,6 @@ class ApplicationController < ActionController::Base
 end
 ```
 
-<!-- AM: Talk about what exactly this line does -->
-
 Success should look like this...
 
 ![Create Grumble 200 OK in Postman](http://i.imgur.com/7bncv7w.png)
@@ -400,6 +387,8 @@ We should now get a `200` response code signifying a successful `POST` request a
 ## Break (10 minutes / 1:45)
 
 ## You Do: Comments#create, Comments#update (15 minutes / 2:00)
+
+> 10 minutes exercise. 5 minutes review.
 
 Your turn. Make sure we can create and update Comments via requests that expect JSON.
 
@@ -452,15 +441,33 @@ Your turn. Make sure we can create and update Comments via requests that expect 
   ```
 </details>
 
-## Conclusion
+#### Bonus
+
+* If you haven't already done so, implement the bonuses from earlier in the lesson
+  * Make it so that the JSON request to Comments#show only return `authorName`, `content`, `title` and `photoUrl`. No `created_at` or `updated_at`.
+  * Make it so that the JSON request to Comments#show also includes the grumble.
+  * Make it so that the artists received from JSON requests to Grumbles#index and Grumbles#show also include their comments
+* Make it so that when you delete a Grumble or Comment via Postman, you get a JSON object confirming that the Grumble or Comment has been deleted
+
+## Closing / Questions
+
+## Resources
+
+* [Postman](https://www.getpostman.com/)
+* [Intro to APIs](https://zapier.com/learn/apis/chapter-1-introduction-to-apis/)
+* [Practice with APIs](https://github.com/ga-dc/weather_teller)
 
 ------
 
-## Bonus: Accessing 3rd Party APIs in Rails
+## Bonus: Accessing 3rd Party APIs using Ruby
 
-Other companies have created something similar. Some follow the REST guidelines, some don't (remember those [Starter APIs](https://github.com/ga-dc/curriculum/tree/master/07-apis-express-ajax/apis#good-starter-apis)?). When we want to retrieve information from them we need to make an http request from within our application. There are a few libraries that help with this. We'll review [HTTParty](https://github.com/jnunemaker/httparty).
+What if we want to retrieve information from a 3rd party API from using Ruby? There are a few libraries that help with this, but the most popular of which is [HTTParty](https://github.com/jnunemaker/httparty).
 
-### Demo: HTTParty
+## Demo: HTTParty
+
+> No need to create a Rails app to run the below code. Just test it out in a lone app.rb file via the Terminal.
+
+#### [HTTParty Documentation](https://github.com/jnunemaker/httparty)
 
 After adding it to our Gemfile. We can start using it right away,
 
@@ -526,11 +533,3 @@ washington.weather
 ```
 
 > If you'd like to learn more about APIs and POROs, Andy has a [great blog post](http://andrewsunglaekim.github.io/Server-side-api-calls-wrapped-in-ruby-classes/) on the subject.
-
-You'll be doing this same sort of thing in much greater detail from the client-side during this afternoon's [AJAX lesson](https://github.com/ga-dc/curriculum/tree/master/07-apis-express-ajax/ajax)!  
-
-
-## Resources:
-* [Postman](https://www.getpostman.com/)
-* [Intro to APIs](https://zapier.com/learn/apis/chapter-1-introduction-to-apis/)
-* [Practice with APIs](https://github.com/ga-dc/weather_teller)
