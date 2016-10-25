@@ -26,9 +26,9 @@
 </details>
 
 <details>
-  <summary><strong>What information do we need to provide in order to be able to retrieve information from an API? What about for modifying data in an API?</strong></summmary>
+  <summary><strong>What information do we need to provide in order to be able to retrieve information from an API? What about for modifying data in an API?</strong></summary>
 
-  > In order to "GET" or "DELETE" information, we need to provide a `url` `type` (HTTP method) and `dataType` (API data format). In order to "POST" or "PUT", we also need to provide some `data`.
+  > In order to "GET" or "DELETE" information, we need to provide a `url` `type` (HTTP method) and `dataType` (API data format). > In order to "POST" or "PUT", we also need to provide some `data`.
 
 </details>
 
