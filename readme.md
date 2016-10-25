@@ -9,7 +9,7 @@
 
 ## Framing
 
-## A Quick Refresher: What Is An API? (5 minutes / 0:05)
+## A Quick Refresher (5 minutes / 0:05)
 
 <details>
   <summary><strong>What is an API?</strong></summary>
