@@ -118,7 +118,7 @@ There's something under the `URI Pattern` column we haven't talked about much ye
 * Which format have we dealt with primarily so far?
 * Which format do we need our application to render in order to have a functional API?
 
-### I Do: Tunr artists#show (10 minutes / 0:35)
+## I Do: Tunr artists#show (10 minutes / 0:35)
 
 > Please follow along.
 
@@ -197,7 +197,7 @@ end
 
 Let's demo this in the browser and Postman.
 
-### We Do: Tunr Artists#index (5 minutes / 0:40)
+## We Do: Tunr Artists#index (5 minutes / 0:40)
 
 Let's walk through the same process for `Artists#index`.
 
@@ -234,15 +234,14 @@ It's your turn to do the same for Songs. You should be working in `songs_control
 
 ## Break (10 minutes / 1:05)
 
-### I Do: Tunr Artists#create (30 minutes / 1:35)
+## I Do: Tunr Artists#create (30 minutes / 1:35)
 
 It's high time we created an Artist. What do we have to change to support this functionality?
 * What HTTP request will we be sending? What route and controller action does that correspond to?
 * What is the purpose of `Artists#new`?
 * What do we have to change in `Artists#create`?
 
-Here's our current code.
-* What's different about `create` vs. `index` + `show`? What do we need to account for in our `respond_to` block?
+Here's our current code...
 
 ```rb
 # POST /artists
@@ -255,6 +254,8 @@ def create
   end
 end
 ```
+
+> What's different about `create` vs. `index` + `show`? What do we need to account for in our `respond_to` block?
 
 We need to update the response to respond to the format.
 
@@ -289,7 +290,7 @@ If we successfully save the `@artist`...
 * When the requested format is "html", we redirect to the show page for the `@artist`
 * When the requested format is "json", we return the `@artist` as JSON, with an HTTP status of "201 Created"
 
-If save fails...  
+If the save fails...  
 * When the requested format is "html", we render the `:new` page to show the human the error of their ways
 * When the requested format is "json", we return the error as JSON and inform the requesting computer that we have an `unprocessable_entity`. Trust me, they'll understand.
 
@@ -349,15 +350,17 @@ We should now get a `200` response code signifying a successful `POST` request a
 
 ## Break (10 minutes / 1:45)
 
-### You Do: Tunr songs#create, songs#update (15 minutes / 2:00)
+## You Do: Tunr songs#create, songs#update (15 minutes / 2:00)
 
 Your turn. Make sure we can create and update Songs via requests that expect JSON.
 
-## Conclusion (5 minutes)
+## Accessing Our API With Angular
+
+## Conclusion
 
 ------
 
-## Accessing 3rd Party APIs in Rails
+## Bonus: Accessing 3rd Party APIs in Rails
 
 Other companies have created something similar. Some follow the REST guidelines, some don't (remember those [Starter APIs](https://github.com/ga-dc/curriculum/tree/master/07-apis-express-ajax/apis#good-starter-apis)?). When we want to retrieve information from them we need to make an http request from within our application. There are a few libraries that help with this. We'll review [HTTParty](https://github.com/jnunemaker/httparty).
 
