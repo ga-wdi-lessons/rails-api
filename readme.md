@@ -1,3 +1,14 @@
+<!-- TODOs -->
+  <!-- Update screenshots -->
+  <!-- Introduce "include" -->
+  <!-- Have students code along all the way through? -->
+  <!-- Need more bonuses -->
+  <!-- Update repo title and rename the other one -->
+  <!-- Figure out routes for comments index - nested or no? -->
+  <!-- Make sure comment create/update uses new-save paradigm -->
+  <!-- Add you do solutions -->
+  <!-- Add a "NO COPY PASTING" warning -->
+
 # APIs
 
 ## Learning Objectives
@@ -74,43 +85,35 @@ And here's an example of an unsuccessful `403 Forbidden` API call. Why did it fa
 
 Today, we're going to use Rails to create our own API from which we can pull information. We will be using a familiar codebase, and modify it so that it can serve up data.  
 
-Let's demonstrate using Tunr. Clone down this [Tunr starter code](https://github.com/ga-dc/tunr_rails_json)...
+Let's demonstrate using Grumblr. Clone down this [starter code](https://github.com/ga-wdi-exercises/grumblr_rails_api/) and checkout the `wdi12-starter` branch...
 
 ```bash
-$ git clone git@github.com:ga-wdi-exercises/tunr_rails_json.git
+$ git clone git@github.com:ga-wdi-exercises/grumblr_rails_api.git
+$ git checkout -b wdi12-starter
 ```
 
 Earlier we used an HTTP request to retrieve information from a 3rd party API. Under the hood, that API received a GET request in the exact same way that the Rails application we have build in class thus far have received GET requests.
 * All the requests that our Rails application can receive are listed when we run `rake routes` in the Terminal. We create RESTful routes and corresponding controller actions that respond to `GET` `POST` `PATCH` `PUT` and `DELETE` requests.
 
 ```bash
-Prefix            Verb   URI Pattern                                   Controller#Action
-root              GET    /                                             artists#index
-songs             GET    /songs(.:format)                              songs#index
-artist_songs      GET    /artists/:artist_id/songs(.:format)           songs#index
-                  POST   /artists/:artist_id/songs(.:format)           songs#create
-new_artist_song   GET    /artists/:artist_id/songs/new(.:format)       songs#new
-edit_artist_song  GET    /artists/:artist_id/songs/:id/edit(.:format)  songs#edit
-artist_song       GET    /artists/:artist_id/songs/:id(.:format)       songs#show
-                  PATCH  /artists/:artist_id/songs/:id(.:format)       songs#update
-                  PUT    /artists/:artist_id/songs/:id(.:format)       songs#update
-                  DELETE /artists/:artist_id/songs/:id(.:format)       songs#destroy
-artist_genres     GET    /artists/:artist_id/genres(.:format)          genres#index
-                  POST   /artists/:artist_id/genres(.:format)          genres#create
-new_artist_genre  GET    /artists/:artist_id/genres/new(.:format)      genres#new
-edit_artist_genre GET    /artists/:artist_id/genres/:id/edit(.:format) genres#edit
-artist_genre      GET    /artists/:artist_id/genres/:id(.:format)      genres#show
-                  PATCH  /artists/:artist_id/genres/:id(.:format)      genres#update
-                  PUT    /artists/:artist_id/genres/:id(.:format)      genres#update
-                  DELETE /artists/:artist_id/genres/:id(.:format)      genres#destroy
-artists           GET    /artists(.:format)                            artists#index
-                  POST   /artists(.:format)                            artists#create
-new_artist        GET    /artists/new(.:format)                        artists#new
-edit_artist       GET    /artists/:id/edit(.:format)                   artists#edit
-artist            GET    /artists/:id(.:format)                        artists#show
-                  PATCH  /artists/:id(.:format)                        artists#update
-                  PUT    /artists/:id(.:format)                        artists#update
-                  DELETE /artists/:id(.:format)                        artists#destroy
+Prefix Verb           URI Pattern                                              Controller#Action
+grumble_comments      GET    /grumbles/:grumble_id/comments(.:format)          comments#index
+                      POST   /grumbles/:grumble_id/comments(.:format)          comments#create
+new_grumble_comment   GET    /grumbles/:grumble_id/comments/new(.:format)      comments#new
+edit_grumble_comment  GET    /grumbles/:grumble_id/comments/:id/edit(.:format) comments#edit
+grumble_comment       GET    /grumbles/:grumble_id/comments/:id(.:format)      comments#show
+                      PATCH  /grumbles/:grumble_id/comments/:id(.:format)      comments#update
+                      PUT    /grumbles/:grumble_id/comments/:id(.:format)      comments#update
+                      DELETE /grumbles/:grumble_id/comments/:id(.:format)      comments#destroy
+grumbles              GET    /grumbles(.:format)                               grumbles#index
+                      POST   /grumbles(.:format)                               grumbles#create
+new_grumble           GET    /grumbles/new(.:format)                           grumbles#new
+edit_grumble          GET    /grumbles/:id/edit(.:format)                      grumbles#edit
+grumble               GET    /grumbles/:id(.:format)                           grumbles#show
+                      PATCH  /grumbles/:id(.:format)                           grumbles#update
+                      PUT    /grumbles/:id(.:format)                           grumbles#update
+                      DELETE /grumbles/:id(.:format)                           grumbles#destroy
+root                  GET    /                                                 redirect(301, /grumbles)
 ```
 
 There's something under the `URI Pattern` column we haven't talked about much yet: **`.:format`**
@@ -118,11 +121,11 @@ There's something under the `URI Pattern` column we haven't talked about much ye
 * Which format have we dealt with primarily so far?
 * Which format do we need our application to render in order to have a functional API?
 
-## I Do: Tunr artists#show (10 minutes / 0:35)
+## I Do: Grumblr grumbles#show (10 minutes / 0:35)
 
 > Please follow along.
 
-Let's set up Tunr so that it returns JSON. `Artists#show` is a small, well-defined step. Let's start there.
+Let's set up Grumblr so that it returns JSON. `Grumbles#show` is a small, well-defined step. Let's start there.
 
 <details>
   <summary><strong>What do we want to happen?</strong></summary>
@@ -132,35 +135,35 @@ Let's set up Tunr so that it returns JSON. `Artists#show` is a small, well-defin
 
 </details>
 
-In particular, we want `/artists/4.json` to return this...
+In particular, we want `/grumbles/4.json` to return something like this...
 
 ```json
 {
-  id: 4,
-  name: "Lykke Li",
-  photo_url: "http://www.chartattack.com/wp-content/uploads/2012/07/lykke-li-newmain1-photo-by-daniel-jackson.jpg",
-  nationality: "Sweden",
-  created_at: "2015-08-11T02:44:24.173Z",
-  updated_at: "2015-08-11T02:44:24.173Z"
+  "id": 4,
+  "authorName": "Adrian Maseda",
+  "content": "This is a grumble.",
+  "photo_url": "http://www.placecage.com/300/300",
+  "created_at": "2016-10-11T02:44:24.173Z",
+  "updated_at": "2016-10-11T02:44:24.173Z"
 }
 ```
 
 Why `.json`? Check out `rake routes`...
 
 ``` ruby
-Prefix  Verb  URI Pattern             Controller#Action
-artist  GET   /artists/:id(.:format)  artists#show
+Prefix    Verb  URI Pattern               Controller#Action
+grumble   GET   /grumbles/:id(.:format)   grumbles#show
 ```
 
 See `(.:format)`? That means our routes support passing a format at the end of the path using dot-notation, like a file extension.
 
-Requesting "GET" from Postman, using `http://localhost:3000/artists/3.json` as the URL, we see a lot of something. Not very helpful.  What is that?  
+Requesting "GET" from Postman, using `http://localhost:3000/grumbles/3.json` as the URL, we see a lot of something. Not very helpful.  What is that?  
 
 HTML? Let's test that url in our browser. What error do we see?
 
 ![Missing template](http://i.imgur.com/4cWDzVU.png)
 
-> The important bits are `Missing template artists/show` and `:formats=>[:json]`
+> The important bits are `Missing template grumbles/show` and `:formats=>[:json]`
 
 Rails is expecting a JSON formatted response. Let's fix this by adding some lines to our show action in our controller.
 
@@ -171,46 +174,48 @@ Rails provides an incredibly useful helper - `respond_to` - that we can use in o
 Our current code...
 
 ```rb
+# grumbles_controller.rb
+
 def show
-  @artist = Artist.find(params[:id])
+  @grumble = Grumble.find(params[:id])
 end
 ```
 
 Let's modify that so our app can serve up JSON...
 
 ```rb
+# grumbles_controller.rb
+
 def show
-  @artist = Artist.find( params[:id] )
+  @grumble = Grumble.find(params[:id])
 
   respond_to do |format|
     format.html { render :show }
-    format.json { render json: @artist }
+    format.json { render json: @grumble }
   end
 end
 ```
 
-<!-- AM: Introduce "include" later -->
-
-> If the request format is html, render the show view (show.html.erb). If the request format is JSON, render the data stored in `@artist` as JSON.
+> If the request format is html, render the show view (show.html.erb). If the request format is JSON, render the data stored in `@grumble` as JSON.
 >
 > Note the nested JSON objects.
 
 Let's demo this in the browser and Postman.
 
-## We Do: Tunr Artists#index (5 minutes / 0:40)
+## We Do: Grumbles#index (5 minutes / 0:40)
 
-Let's walk through the same process for `Artists#index`.
+Let's walk through the same process for `Grumbles#index`.
 
 <details>
   <summary><strong>What should we do?</strong></summary>
 
   ```rb
   def index
-    @artists = Artist.all
+    @grumbles = Grumble.all
 
     respond_to do |format|
       format.html { render :index }
-      format.json { render json: @artists }
+      format.json { render json: @grumbles }
     end
   end
   ```
@@ -219,36 +224,37 @@ Let's walk through the same process for `Artists#index`.
 
 Demonstrate in browser and Postman.
 
-### You Do: Tunr Songs#index and Songs#show (15 minutes / 0:55)
+### You Do: Comments#index and Comments#show (15 minutes / 0:55)
 
 > 10 minutes exercise. 5 minute review.
 
-It's your turn to do the same for Songs. You should be working in `songs_controller.rb` for this.
+It's your turn to do the same for Comments. You should be working in `songs_controller.rb` for this.
 
 #### Bonus
 
-* Make it so that the JSON requests only return `title`, `album` and `preview_url`. No `created_at` or `updated_at`.
-* Make it so that the JSON request to Songs#show also includes the artist.
+* Make it so that the JSON requests only return `authorName`, `content`, `title` and `photoUrl`. No `created_at` or `updated_at`.
+* Make it so that the JSON request to Comments#show also includes the artist.
 
 > Both of these will require some Googling.
 
 ## Break (10 minutes / 1:05)
 
-## I Do: Tunr Artists#create (30 minutes / 1:35)
+## I Do: Grumbles#create (30 minutes / 1:35)
 
-It's high time we created an Artist. What do we have to change to support this functionality?
+It's high time we created a Grumble. What do we have to change to support this functionality?
 * What HTTP request will we be sending? What route and controller action does that correspond to?
-* What is the purpose of `Artists#new`?
-* What do we have to change in `Artists#create`?
+* What is the purpose of `Grumbles#new`? How will it factor into our API?
+* What do we have to change in `Grumbles#create`?
 
 Here's our current code...
 
 ```rb
-# POST /artists
+# grumbles_controller.rb
+
 def create
-  @artist = Artist.new(artist_params)
-  if @artist.save
-    redirect_to (artist_path(@artist))
+  @grumble = Grumble.new(grumble_params)
+  if @grumble.save!
+    redirect_to @grumble
   else
     render :new
   end
@@ -269,42 +275,49 @@ We need to update the response to respond to the format.
 </details>
 
 ```rb
-# POST /artists
-# POST /artists.json
+# POST /grumbles
+# POST /grumbles.json
 def create
-  @artist = Artist.new(artist_params)
+  @grumble = Grumble.new(grumble_params)
 
   respond_to do |format|
-    if @artist.save
-      format.html { redirect_to @artist, notice: 'Artist was successfully created.' }
-      format.json { render json: @artist, status: :created, location: @artist }
+    if @grumble.save!
+      format.html { redirect_to @grumble, notice: 'Grumble was successfully created.' }
+      format.json { render json: @grumble, status: :created, location: @grumble }
     else
       format.html { render :new }
-      format.json { render json: @artist.errors, status: :unprocessable_entity }
+      format.json { render json: @grumble.errors, status: :unprocessable_entity }
     end
   end
 end
 ```
 
-If we successfully save the `@artist`...  
-* When the requested format is "html", we redirect to the show page for the `@artist`
-* When the requested format is "json", we return the `@artist` as JSON, with an HTTP status of "201 Created"
+If we successfully save the `@grumble`...  
+* When the requested format is "html", we redirect to the show page for the `@grumble`
+* When the requested format is "json", we return the `@grumble` as JSON, with an HTTP status of "201 Created"
 
 If the save fails...  
 * When the requested format is "html", we render the `:new` page to show the human the error of their ways
-* When the requested format is "json", we return the error as JSON and inform the requesting computer that we have an `unprocessable_entity`. Trust me, they'll understand.
+* When the requested format is "json", we return the error as JSON and inform the requesting computer that we have an `unprocessable_entity`.
 
-### Testing Artists#create
+### Testing Grumbles#create
 
 How do we usually test this functionality in the browser? A form!  
 
 Today, we'll use Postman. It makes POSTing requests easy.
-  1. Enter url: `localhost:3000/artists`  
+  1. Enter url: `localhost:3000/grumbles`  
   2. Method: POST  
   3. Add a `Content-Type` header set to `application/json`
-  3. Add your Artist data to "Request Body".  
+  3. Add your Grumble data to "Request Body".  
     ```json
-    { "artist": { "name" : "Sting" }}
+    {
+      "grumble": {
+        "authorName": "Jesse",
+        "title": "Jesse's new grumble",
+        "content": "Check out this grumble!",
+        "photoUrl": "http://placecage.com/400/400"
+      }
+    }
     ```
   4. Press "Submit".  
 
@@ -318,7 +331,7 @@ The raw response from this request is an error page, rendered as html. Sometimes
 ```html
 <h1>
   ActionController::InvalidAuthenticityToken
-    in ArtistsController#create
+    in GrumblesController#create
 </h1>
 ```
 
@@ -344,15 +357,15 @@ end
 
 Success should look like this...
 
-![Create Artist 200 OK in Postman](http://i.imgur.com/7bncv7w.png)
+![Create Grumble 200 OK in Postman](http://i.imgur.com/7bncv7w.png)
 
 We should now get a `200` response code signifying a successful `POST` request and we can preview the html page sent back as the response (our newly created artist's show page)
 
 ## Break (10 minutes / 1:45)
 
-## You Do: Tunr songs#create, songs#update (15 minutes / 2:00)
+## You Do: Comments#create, Comments#update (15 minutes / 2:00)
 
-Your turn. Make sure we can create and update Songs via requests that expect JSON.
+Your turn. Make sure we can create and update Comments via requests that expect JSON.
 
 ## Accessing Our API With Angular
 
