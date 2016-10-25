@@ -8,6 +8,12 @@
   <!-- Make sure comment create/update uses new-save paradigm -->
   <!-- Add you do solutions -->
   <!-- Add a "NO COPY PASTING" warning -->
+  <!-- Make sure update actions are two-tiered -->
+  <!-- What is the update version of `status: :created` -->
+  <!-- What about DELETE? -->
+  <!-- Fix comment show view and controller in starter. Added to solution -->
+  <!-- Make a note of using Postman without .json -- retrieve an html page accidentally -->
+  <!-- Note that we can see the result of Postman requests in the tab running the rails server -->
 
 # APIs
 
@@ -230,12 +236,42 @@ Demonstrate in browser and Postman.
 
 It's your turn to do the same for Comments. You should be working in `songs_controller.rb` for this.
 
+<details>
+  <summary><strong>Solution...</strong></summary>
+
+  ```rb
+  # comments_controller.rb
+
+  def index
+    @grumble = Grumble.find(params[:grumble_id])
+    @comments = @grumble.comments.order(:created_at)
+
+    respond_to do |format|
+      format.html { render :index }
+      format.json { render json: @comments }
+    end
+  end
+
+  def show
+    @grumble = Grumble.find(params[:grumble_id])
+    @comment = Comment.find(params[:id])
+
+    respond_to do |format|
+      format.html { render :show }
+      format.json { render json: @comment }
+    end
+  end
+  ```
+
+</details>
+
 #### Bonus
 
-* Make it so that the JSON requests only return `authorName`, `content`, `title` and `photoUrl`. No `created_at` or `updated_at`.
-* Make it so that the JSON request to Comments#show also includes the artist.
+* Make it so that the JSON request to Comments#show only return `authorName`, `content`, `title` and `photoUrl`. No `created_at` or `updated_at`.
+* Make it so that the JSON request to Comments#show also includes the grumble.
+* Make it so that the artists received from JSON requests to Grumbles#index and Grumbels#show also include their comments
 
-> Both of these will require some Googling.
+> All of these will require some Googling.
 
 ## Break (10 minutes / 1:05)
 
@@ -275,8 +311,8 @@ We need to update the response to respond to the format.
 </details>
 
 ```rb
-# POST /grumbles
-# POST /grumbles.json
+# grumbles_controller.rb
+
 def create
   @grumble = Grumble.new(grumble_params)
 
