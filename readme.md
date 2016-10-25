@@ -1,6 +1,7 @@
 <!-- Update screenshots -->
 <!-- Introduce "include" -->
 <!-- What is the update version of `status: :created` -->
+<!-- Add stylesheet -->
 
 # APIs
 
@@ -9,7 +10,6 @@
 - Describe what an API is, and why we might use one.
 - Describe the purpose and syntax of `respond_to`
 - Make a Rails app that provides a JSON API.
-- Use an external API (via HTTParty) to gather data and utilize it in a Rails application
 
 ## Framing
 
@@ -255,8 +255,6 @@ It's your turn to do the same for Comments. You should be working in `songs_cont
 
 </details>
 
-> No copy-pasting!
-
 #### Bonus
 
 * Make it so that the JSON request to Comments#show only return `authorName`, `content`, `title` and `photoUrl`. No `created_at` or `updated_at`.
@@ -449,6 +447,14 @@ Your turn. Make sure we can create and update Comments via requests that expect 
   * Make it so that the JSON request to Comments#show also includes the grumble.
   * Make it so that the artists received from JSON requests to Grumbles#index and Grumbles#show also include their comments
 * Make it so that when you delete a Grumble or Comment via Postman, you get a JSON object confirming that the Grumble or Comment has been deleted
+
+## Pro-Tip: `include`
+
+<!-- AM: Give an example of using include to display nested resources in API response -->
+
+## Pro-Tip: CORS
+
+<!-- Provide some resources for CORS issues -->
 
 ## Closing / Questions
 
