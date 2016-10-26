@@ -3,25 +3,41 @@
 ## Learning Objectives
 
 - Describe what an API is, and why we might use one.
-- Explain the common role of JSON on the web.
 - Describe the purpose and syntax of `respond_to`
 - Make a Rails app that provides a JSON API.
-- Use an external API (via HTTParty) to gather data and utilize it in a Rails application
 
-## What is an API? (30 minutes / 0:30)
+## Framing
 
-**Basically, an API is a service that provides raw data for public use.**
+Yesterday afternoon you learned how to use Angular and `ngResource` to communicate with an API. In particular, you performed CRUD actions on a Grumblr API the instructors made for you. This morning you will learn how to build a Rails API from the ground up and create a back-end that serves up JSON along with the usual HTML views.
 
-API stands for "Application Program Interface", and technically applies to all of software design. However, since the explosion of information technology, the term now commonly refers to web URLs that can be accessed for raw data.
+## A Quick Refresher (5 minutes / 0:05)
 
-APIs publish data for public use. As third-party software developers, we can access an organization's API and use their data within our own applications.
+<details>
+  <summary><strong>What is an API?</strong></summary>
 
-**Check out these stock quotes...**
+  > An "Application Program Interface." While it technically applies to all of software design, the term has come to refer to web URLs that can be accessed for raw data.
 
-* [http://dev.markitondemand.com/Api/Quote/json?symbol=AAPL](http://dev.markitondemand.com/Api/Quote/json?symbol=AAPL)
-* [http://dev.markitondemand.com/Api/Quote/json?symbol=GOOGL](http://dev.markitondemand.com/Api/Quote/json?symbol=GOOGL)
+</details>
 
-## API Exploration
+<details>
+  <summary><strong>How can we go about accessing an API programmatically?</strong></summary>
+
+  > Using jQuery's AJAX method, Angular's ngResource or some other equivalent.
+
+</details>
+
+<details>
+  <summary><strong>What information do we need to provide in order to be able to retrieve information from an API? What about for modifying data in an API?</strong></summary>
+
+  > In order to "GET" or "DELETE" information, we need to provide a `url` `type` (HTTP method) and `dataType` (API data format). > In order to "POST" or "PUT", we also need to provide some `data`.
+
+</details>
+
+## API Exploration (5 minutes / 0:10)
+
+> 3 minutes exercise. 2 minutes review.
+
+We spent some time earlier this week accessing a couple 3rd party APIs. What we haven't done yet, however, is focus on how different APIs can be.
 
 Form pairs and explore the API links in the below table. Record any observations that come to mind. In particular, think about what you see in the URL and the API response itself.
 
@@ -34,88 +50,16 @@ Form pairs and explore the API links in the below table. Record any observations
 | **[StarWars](http://swapi.co/)** | http://swapi.co/api/people/3 |
 | **[Stocks](http://dev.markitondemand.com/MODApis/)** | http://dev.markitondemand.com/Api/Quote/json?symbol=AAPL |
 
-### Why Just Data?
+## A Closer Look at an API Request (5 minutes / 0:15)
 
-Sometimes thats's all we need. All this information, from all these browsers and all these servers, has to travel through the network. That's almost certainly the slowest part of the request cycle. We want to minimize the bits. There are times when we just need the data. For those times, we want a concise format.   
+Let's make a basic HTTP request to an API. While we can do this in the browser, we're going to use Postman - a Chrome plug-in for making HTTP requests - so we can not only look at it in more detail, but also make `POST` `PUT` and `DELETE` from the browser without building an app.  
 
-## What is serialized data?
+#### Postman Setup
 
-All data sent via HTTP are strings. Unfortunately, what we really want to pass between web applications is *structured data*, as in: native arrays and hashes. Thus, native data structures can be *serialized* into a string representation of the data. This string can be transmitted, and then parsed back into data by another web agent.  
-
-There are **two** major serialized data formats:  
-
-* **JSON** stands for "JavaScript Object Notation", and has become a universal standard for serializing native data structures for transmission. It is light-weight, easy to read, and quick to parse.
-
-```json
-{
-  "users": [
-    {"name": "Bob", "id": 23},
-    {"name": "Tim", "id": 72}
-  ]
-}
-```
-> Remember, JSON is a serialized format. While it may look like an object, it needs to be parsed so we can interact with it as a true Javascript object.
-
-* **XML** stands for "eXtensible Markup Language", and is the granddaddy of serialized data formats (itself based on HTML). XML is fat, ugly, and cumbersome to parse. However, it remains a major format due to its legacy usage across the web. You'll probably always favor using a JSON API, if available.
-
-```
-<users>
-  <user id="23">
-    <name><![CDATA[Bob]]></name>
-  </user>
-  <user id="72">
-    <name><![CDATA[Tim]]></name>
-  </user>
-</users>
-```
-
-**Many APIs publish data in multiple formats, for example...**
-
-* [http://dev.markitondemand.com/Api/Quote/json?symbol=AAPL](http://dev.markitondemand.com/Api/Quote/json?symbol=AAPL)
-* [http://dev.markitondemand.com/Api/Quote/xml?symbol=AAPL](http://dev.markitondemand.com/Api/Quote/xml?symbol=AAPL)
-
-## Where Do We Find APIs?
-
-APIs are published everywhere. Chances are good that most major content sources you follow online publish their data in some type of serialized format. Heck, [even Marvel publishes an API](http://developer.marvel.com/documentation/getting_started). Look around for a "Developers" section on major websites, or ask the Google Answer-Bot.
-
-**That sounds hard. Can't you just give me a freebie?**
-
-Okay... try the [Programmable Web API Directory](http://www.programmableweb.com/apis/directory) or the [Public APIs Directory](http://www.publicapis.com/).
-
-## What Is An API Key?
-
-While the majority of APIs are free to use, many of them require an API "key" that identifies the developer requesting data access. This is done to regulate usage and prevent abuse. Some APIs also rate-limit developers, meaning they have caps on the free data allowed during a given time period.
-
-**Try hitting the Giphy API...**
-
-* No key: [http://api.giphy.com/v1/gifs/search?q=funny+cat](http://api.giphy.com/v1/gifs/search?q=funny+cat)
-
-* With key: [http://api.giphy.com/v1/gifs/search?q=funny+cat&api_key=dc6zaTOxFJmzC](http://api.giphy.com/v1/gifs/search?q=funny+cat&api_key=dc6zaTOxFJmzC)
-
-> It is very important that you not push your API keys to a public Github repo. [Figaro](https://github.com/laserlemon/figaro) is a useful gem to utilize environment variables for hiding API keys.
-
-## Good Starter APIs
-
-There is an immense number of APIs out there from which you can pull data.
-
-| API | Sample URL |
-|-----|------------|
-| **[This for That](http://itsthisforthat.com/)** | http://itsthisforthat.com/api.php?json |
-| **[iTunes](https://www.apple.com/itunes/affiliates/resources/documentation/itunes-store-web-service-search-api.html)** | http://itunes.apple.com/search?term=adele |
-| **[Giphy](https://github.com/Giphy/GiphyAPI)** | http://api.giphy.com/v1/gifs/search?q=funny+cat&api_key=dc6zaTOxFJmzC |
-| **[OMDB API](http://www.omdbapi.com/)** | http://www.omdbapi.com/?t=Game%20of%20Thrones&Season=1 |
-| **[StarWars](http://swapi.co/)** | http://swapi.co/api/people/3 |
-| **[Stocks](http://dev.markitondemand.com/MODApis/)** | http://dev.markitondemand.com/Api/Quote/json?symbol=AAPL |
-> Note the variety in the URLs used to access these APIs. Do any of them look similar to what you've made in class?
-
-## A Closer Look at an API Request
-
-Let's make a basic HTTP request to an API. While we can technically just do this in the browser, we're going to use Postman - a Chrome plug-in for making HTTP requests - so we can look at it in more detail.  
-Steps  
-  1. [Download Postman](https://www.getpostman.com/).  
-  2. Type in the "url" of an API call.  
-  3. Ensure the "method" is "GET".  
-  4. Press "Send".  
+1. [Download Postman](https://www.getpostman.com/).  
+2. Type in the "url" of an API call.  
+3. Ensure the "method" is "GET".  
+4. Press "Send".  
 
 Here's an example of a successful `200 OK` API call...
 
@@ -125,50 +69,45 @@ And here's an example of an unsuccessful `403 Forbidden` API call. Why did it fa
 
 ![Postman screenshot fail](http://i.imgur.com/r3nIhGH.png)
 
-> We'll use Postman more when we test out our own API later in today's class.
-
-
 ## Rails and JSON
 
-### Intro (10 minutes / 0:40)
+### Intro (10 minutes / 0:25)
 
 Today, we're going to use Rails to create our own API from which we can pull information. We will be using a familiar codebase, and modify it so that it can serve up data.  
 
-Let's demonstrate using Tunr.
+Let's demonstrate using Grumblr. Clone down this [starter code](https://github.com/ga-wdi-exercises/grumblr_rails_api/) and checkout the `api-starter` branch...
 
-* **[STARTER CODE](https://github.com/ga-dc/tunr_rails_json)**
+```bash
+$ git clone git@github.com:ga-wdi-exercises/grumblr_rails_api.git
+$ cd grumblr_rails_api
+$ git checkout api-starter
+$ rails s
+```
+
+> The solution to today's code is available on the `api-solution` branch
 
 Earlier we used an HTTP request to retrieve information from a 3rd party API. Under the hood, that API received a GET request in the exact same way that the Rails application we have build in class thus far have received GET requests.
 * All the requests that our Rails application can receive are listed when we run `rake routes` in the Terminal. We create RESTful routes and corresponding controller actions that respond to `GET` `POST` `PATCH` `PUT` and `DELETE` requests.
 
 ```bash
-Prefix            Verb   URI Pattern                                   Controller#Action
-root              GET    /                                             artists#index
-songs             GET    /songs(.:format)                              songs#index
-artist_songs      GET    /artists/:artist_id/songs(.:format)           songs#index
-                  POST   /artists/:artist_id/songs(.:format)           songs#create
-new_artist_song   GET    /artists/:artist_id/songs/new(.:format)       songs#new
-edit_artist_song  GET    /artists/:artist_id/songs/:id/edit(.:format)  songs#edit
-artist_song       GET    /artists/:artist_id/songs/:id(.:format)       songs#show
-                  PATCH  /artists/:artist_id/songs/:id(.:format)       songs#update
-                  PUT    /artists/:artist_id/songs/:id(.:format)       songs#update
-                  DELETE /artists/:artist_id/songs/:id(.:format)       songs#destroy
-artist_genres     GET    /artists/:artist_id/genres(.:format)          genres#index
-                  POST   /artists/:artist_id/genres(.:format)          genres#create
-new_artist_genre  GET    /artists/:artist_id/genres/new(.:format)      genres#new
-edit_artist_genre GET    /artists/:artist_id/genres/:id/edit(.:format) genres#edit
-artist_genre      GET    /artists/:artist_id/genres/:id(.:format)      genres#show
-                  PATCH  /artists/:artist_id/genres/:id(.:format)      genres#update
-                  PUT    /artists/:artist_id/genres/:id(.:format)      genres#update
-                  DELETE /artists/:artist_id/genres/:id(.:format)      genres#destroy
-artists           GET    /artists(.:format)                            artists#index
-                  POST   /artists(.:format)                            artists#create
-new_artist        GET    /artists/new(.:format)                        artists#new
-edit_artist       GET    /artists/:id/edit(.:format)                   artists#edit
-artist            GET    /artists/:id(.:format)                        artists#show
-                  PATCH  /artists/:id(.:format)                        artists#update
-                  PUT    /artists/:id(.:format)                        artists#update
-                  DELETE /artists/:id(.:format)                        artists#destroy
+Prefix Verb           URI Pattern                                              Controller#Action
+grumble_comments      GET    /grumbles/:grumble_id/comments(.:format)          comments#index
+                      POST   /grumbles/:grumble_id/comments(.:format)          comments#create
+new_grumble_comment   GET    /grumbles/:grumble_id/comments/new(.:format)      comments#new
+edit_grumble_comment  GET    /grumbles/:grumble_id/comments/:id/edit(.:format) comments#edit
+grumble_comment       GET    /grumbles/:grumble_id/comments/:id(.:format)      comments#show
+                      PATCH  /grumbles/:grumble_id/comments/:id(.:format)      comments#update
+                      PUT    /grumbles/:grumble_id/comments/:id(.:format)      comments#update
+                      DELETE /grumbles/:grumble_id/comments/:id(.:format)      comments#destroy
+grumbles              GET    /grumbles(.:format)                               grumbles#index
+                      POST   /grumbles(.:format)                               grumbles#create
+new_grumble           GET    /grumbles/new(.:format)                           grumbles#new
+edit_grumble          GET    /grumbles/:id/edit(.:format)                      grumbles#edit
+grumble               GET    /grumbles/:id(.:format)                           grumbles#show
+                      PATCH  /grumbles/:id(.:format)                           grumbles#update
+                      PUT    /grumbles/:id(.:format)                           grumbles#update
+                      DELETE /grumbles/:id(.:format)                           grumbles#destroy
+root                  GET    /                                                 redirect(301, /grumbles)
 ```
 
 There's something under the `URI Pattern` column we haven't talked about much yet: **`.:format`**
@@ -176,44 +115,49 @@ There's something under the `URI Pattern` column we haven't talked about much ye
 * Which format have we dealt with primarily so far?
 * Which format do we need our application to render in order to have a functional API?
 
-### I DO: Tunr artists#show (10 minutes / 0:50)
+## I Do: Grumblr grumbles#show (10 minutes / 0:35)
 
-Let's set up Tunr so that it returns JSON. `Artists#show` is a small, well-defined step. Let's start there.
+> Please follow along.
 
-What do we want to happen?
-> If I ask for html, Rails renders html.
-> If I ask for JSON, Rails renders json.
+Let's set up Grumblr so that it returns JSON. `Grumbles#show` is a small, well-defined step. Let's start there.
 
-In particular, we want `/artists/4.json` to return this...
+<details>
+  <summary><strong>What do we want to happen?</strong></summary>
+
+  > If I ask for html, Rails renders html.
+  > If I ask for JSON, Rails renders json.
+
+</details>
+
+In particular, we want `/grumbles/4.json` to return something like this...
+
 ```json
 {
-  id: 4,
-  name: "Lykke Li",
-  photo_url: "http://www.chartattack.com/wp-content/uploads/2012/07/lykke-li-newmain1-photo-by-daniel-jackson.jpg",
-  nationality: "Sweden",
-  created_at: "2015-08-11T02:44:24.173Z",
-  updated_at: "2015-08-11T02:44:24.173Z"
+  "id": 4,
+  "authorName": "Adrian Maseda",
+  "content": "This is a grumble.",
+  "photo_url": "http://www.placecage.com/300/300",
+  "created_at": "2016-10-11T02:44:24.173Z",
+  "updated_at": "2016-10-11T02:44:24.173Z"
 }
 ```
 
 Why `.json`? Check out `rake routes`...
 
 ``` ruby
-Prefix  Verb  URI Pattern             Controller#Action
-artist  GET   /artists/:id(.:format)  artists#show
+Prefix    Verb  URI Pattern               Controller#Action
+grumble   GET   /grumbles/:id(.:format)   grumbles#show
 ```
 
-See `(.:format)`? That means our routes support passing a format at the end of the path, using dot-notation (like a file extension).  
+See `(.:format)`? That means our routes support passing a format at the end of the path using dot-notation, like a file extension.
 
-Requesting "GET" from Postman: `http://localhost:3000/artists/3.json`, we see a lot of something.  Not very helpful.  What is that?  
+Requesting "GET" from Postman, using `http://localhost:3000/grumbles/3.json` as the URL, we see a lot of something. Not very helpful.  What is that?  
 
 HTML? Let's test that url in our browser. What error do we see?
 
 ![Missing template](http://i.imgur.com/4cWDzVU.png)
 
-The important bits are:
-* Missing template artists/show
-* `:formats=>[:json]`
+> The important bits are `Missing template grumbles/show` and `:formats=>[:json]`
 
 Rails is expecting a JSON formatted response. Let's fix this by adding some lines to our show action in our controller.
 
@@ -222,134 +166,201 @@ Rails is expecting a JSON formatted response. Let's fix this by adding some line
 Rails provides an incredibly useful helper - `respond_to` - that we can use in our controller to render data in a given format depending on the incoming HTTP request.
 
 Our current code...
+
 ```rb
+# grumbles_controller.rb
+
 def show
-  @artist = Artist.find(params[:id])
+  @grumble = Grumble.find(params[:id])
 end
 ```
 
-And after...
+Let's modify that so our app can serve up JSON...
+
 ```rb
+# grumbles_controller.rb
+
 def show
-+    @artist = Artist.find( params[:id] )
-+
-+    respond_to do |format|
-+      format.html { render :show }
-+      format.json { render json: @artist, include: :songs }
-+    end
-   end
-```
-> If the request format is html, render the show view (show.html.erb). If the request format is JSON, render the data stored in `@artist` as JSON.
-> Note the nested JSON objects.
-
-Let's demo this in the browser and Postman.
-
-### WE DO: Tunr Artists#index (10 minutes / 1:00)
-
-Let's walk through the same process for `Artists#index`. Where do we start?
-
-```rb
-def index
-  @artists = Artist.all
+  @grumble = Grumble.find(params[:id])
 
   respond_to do |format|
-    format.html { render :index }
-    format.json { render json: @artists }
+    format.html { render :show }
+    format.json { render json: @grumble }
   end
 end
 ```
 
-Demonstrate in browser and Postman.
-> Does JSON formatting look messy in your browser? Install [JSONview](https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc?hl=en), a Chrome plug-in that displays JSON in a more readable format.
+> If the request format is html, render the show view (show.html.erb). If the request format is JSON, render the data stored in `@grumble` as JSON.
+>
+> Note the nested JSON objects.
 
-### YOU DO: Tunr Songs#index and Songs#show (15 minutes / 1:15)
+Let's demo this in the browser and Postman.
 
-It's your turn to do the same for Songs. You should be working in `songs_controller.rb` for this.
+## We Do: Grumbles#index (5 minutes / 0:40)
 
-**Bonus**
-* Make it so that the JSON requests only return `title`, `album` and `preview_url`. No `created_at` or `updated_at`.
-* Make it so that the JSON request to Songs#show also includes the artist.
+Let's walk through the same process for `Grumbles#index`.
 
-## Break (10 minutes / 1:25)
+<details>
+  <summary><strong>What should we do?</strong></summary>
 
-### I DO: Tunr Artists#create (30 minutes / 1:55)
+  ```rb
+  def index
+    @grumbles = Grumble.all
 
-It's high time we created an Artist. What do we have to change to support this functionality
+    respond_to do |format|
+      format.html { render :index }
+      format.json { render json: @grumbles }
+    end
+  end
+  ```
+
+</details>
+
+> Demonstrate in browser and Postman.
+
+## You Do: Comments#index and Comments#show (15 minutes / 0:55)
+
+> 10 minutes exercise. 5 minute review.
+
+It's your turn to do the same for Comments. You should be working in `comments_controller.rb` for this.
+
+<details>
+  <summary><strong>Solution...</strong></summary>
+
+  ```rb
+  # comments_controller.rb
+
+  def index
+    @grumble = Grumble.find(params[:grumble_id])
+    @comments = @grumble.comments.order(:created_at)
+
+    respond_to do |format|
+      format.html { render :index }
+      format.json { render json: @comments }
+    end
+  end
+
+  def show
+    @grumble = Grumble.find(params[:grumble_id])
+    @comment = Comment.find(params[:id])
+
+    respond_to do |format|
+      format.html { render :show }
+      format.json { render json: @comment }
+    end
+  end
+  ```
+
+</details>
+
+#### Bonus
+
+* Make it so that the JSON request to Comments#show only return `authorName`, `content`, `title` and `photoUrl`. No `created_at` or `updated_at`.
+* Make it so that the JSON request to Comments#show also includes the grumble.
+* Make it so that the artists received from JSON requests to Grumbles#index and Grumbles#show also include their comments
+
+> All of these will require some Googling.
+
+## Break (10 minutes / 1:05)
+
+## I Do: Grumbles#create (30 minutes / 1:35)
+
+It's high time we created a Grumble. What do we have to change to support this functionality?
 * What HTTP request will we be sending? What route and controller action does that correspond to?
-* What is the purpose of `Artists#new`?
-* What do we have to change in `Artists#create`?
+* What is the purpose of `Grumbles#new`? How will it factor into our API?
+* What do we have to change in `Grumbles#create`?
 
-Here's our current code.
-* What's different about `create` vs. `index` and `show`? What do we need to account for in our `respond_to` block?
+Here's our current code...
 
 ```rb
-# POST /artists
+# grumbles_controller.rb
+
 def create
-  @artist = Artist.new(artist_params)
-  if @artist.save
-    redirect_to (artist_path(@artist))
+  @grumble = Grumble.new(grumble_params)
+  if @grumble.save!
+    redirect_to @grumble
   else
     render :new
   end
 end
 ```
 
+> What's different about `create` vs. `index` + `show`? What do we need to account for in our `respond_to` block?
+
 We need to update the response to respond to the format.
-* **Q:** What do we want to happen after a successful save? How about an unsuccessful one?
+
+<details>
+  <summary><strong>What do we want to happen after a successful save? How about an unsuccessful one?</strong></summary>
+
+  > If the save is successful, either redirect the user to the artist show page (HTML) or send back the new artist (JSON).
+  >
+  > If the save fails, either send the user back to the new form (HTML) or send back an error message (JSON).
+
+</details>
 
 ```rb
-# POST /artists
-# POST /artists.json
+# grumbles_controller.rb
+
 def create
-  @artist = Artist.new(artist_params)
+  @grumble = Grumble.new(grumble_params)
 
   respond_to do |format|
-    if @artist.save
-      format.html { redirect_to @artist, notice: 'Artist was successfully created.' }
-      format.json { render json: @artist, status: :created, location: @artist }
+    if @grumble.save!
+      format.html { redirect_to @grumble, notice: 'Grumble was successfully created.' }
+      format.json { render json: @grumble, status: :created, location: @grumble }
     else
       format.html { render :new }
-      format.json { render json: @artist.errors, status: :unprocessable_entity }
+      format.json { render json: @grumble.errors, status: :unprocessable_entity }
     end
   end
 end
 ```
 
-If we successfully save the @artist...  
-* When the requested format is "html", we redirect to the show page for the @artist.  
-* When the requested format is "json", we return the @artist as JSON, with an HTTP status of "201 Created".
+If we successfully save the `@grumble`...  
+* When the requested format is "html", we redirect to the show page for the `@grumble`
+* When the requested format is "json", we return the `@grumble` as JSON, with an HTTP status of "201 Created"
 
-If save fails...  
-* When the requested format is "html", we render the :new page to show the human the error of their ways.
-* When the requested format is "json", we return the error as JSON and inform the requesting computer that we have an "unprocessable_entity". Trust me, they'll understand.
+If the save fails...  
+* When the requested format is "html", we render the `:new` page to show the human the error of their ways
+* When the requested format is "json", we return the error as JSON and inform the requesting computer that we have an `unprocessable_entity`.
 
-### Testing Artists#create
+### Testing Grumbles#create
 
 How do we usually test this functionality in the browser? A form!  
 
-Today, we'll use Postman. It makes POSTing requests easy.
-  1. Enter url: `localhost:3000/artists`  
+But for this lesson, we're going to continue using Postman. Here's how you do it...
+  1. Enter url: `localhost:3000/grumbles`  
   2. Method: POST  
-  3. Add a `Content-Type` header set to `application/json`
-  3. Add your Artist data to "Request Body".  
+  3. Under the "Headers" tab, add a `Content-Type` key with a value of `application/json`
+  3. Add your Grumble data to "Request Body".  
     ```json
-    { "artist": { "name" : "Sting" }}
+    {
+      "grumble": {
+        "authorName": "Jesse",
+        "title": "Jesse's new grumble",
+        "content": "Check out this grumble!",
+        "photoUrl": "http://placecage.com/400/400"
+      }
+    }
     ```
   4. Press "Submit".  
 
+> `Content-Type` is indicating what type of data we are sending to the server - not what we are expecting back.
+
 ![Postman create error](http://imgur.com/YFJIShn.png)
 
-The raw response from this request is an error page, rendered as html.  Sometimes you just have to wade through the html.  Scroll down until you get to the "body".
+The raw response from this request is an error page, rendered as html. Sometimes you just have to wade through the html. Scroll down until you get to the "body".
+
 ```html
- <h1>
+<h1>
   ActionController::InvalidAuthenticityToken
-    in ArtistsController#create
+    in GrumblesController#create
 </h1>
 ```
 
 Additionally we can preview the html, and see a familiar rails error page.
 
-Ah yes. Rails uses an Authenticity token for security. It will provide it for any request made within a form it renders.  Postman is decidedly not that. Let's temporarily adjust that setting for testing purposes. When we go back to using html forms, we can set it back.
+Ah yes. Rails uses an Authenticity token for security. It will provide it for any request made within a form it renders. Postman is decidedly not that. Let's temporarily adjust that setting for testing purposes. When we go back to using html forms, we can set it back.
 
 In our `application_controller.rb` we must adjust the way Rails protects us by default:
 
@@ -365,21 +376,176 @@ end
 
 Success should look like this...
 
-![Create Artist 200 OK in Postman](http://i.imgur.com/7bncv7w.png)
+![Create Grumble 200 OK in Postman](http://i.imgur.com/7bncv7w.png)
 
-We should now get a `200` response code signifying a successful `post` request and we can preview the html page sent back as the response (our newly created artist's show page)
+We should now get a `200` response code signifying a successful `POST` request and we can preview the html page sent back as the response (our newly created artist's show page)
 
-## Break (10 minutes / 2:05)
+## Break (10 minutes / 1:45)
 
-### You do: Tunr songs#create, songs#update (15 minutes / 2:20)
+## You Do: Comments#create, Comments#update (15 minutes / 2:00)
 
-Your turn. Make sure we can create and update Songs via requests that expect JSON.
+> 10 minutes exercise. 5 minutes review.
 
-## 3rd Party APIs (15 minutes / 2:35)
+Your turn. Make sure we can create and update Comments via requests that expect JSON.
 
-Other companies have created something similar. Some follow the REST guidelines, some don't (remember those [Starter APIs](https://github.com/ga-dc/curriculum/tree/master/07-apis-express-ajax/apis#good-starter-apis)?). When we want to retrieve information from them we need to make an http request from within our application. There are a few libraries that help with this. We'll review [HTTParty](https://github.com/jnunemaker/httparty).
+<details>
+  <summary><strong>Solution...</strong></summary>
 
-### Demo: HTTParty
+  > Here's a sample new comment if you want to use it.
+
+  ```json
+  {
+  	"comment": {
+  		"authorName": "Bobby",
+  		"content": "Wow, such comment"
+  	}
+  }
+  ```
+
+  ```rb
+  # comments_controller.rb
+
+  def create
+    @grumble = Grumble.find(params[:grumble_id])
+    @comment = @grumble.comments.new(comment_params)
+
+    respond_to do |format|
+      if @comment.save!
+        format.html { redirect_to @grumble, notice: 'Comment was successfully created.' }
+        format.json { render json: @comment, status: :created }
+      else
+        format.html { render :new }
+        format.json { render json: @comment.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def update
+    @grumble = Grumble.find(params[:grumble_id])
+    @comment = Comment.find(params[:id])
+
+    respond_to do |format|
+      if @comment.update!(comment_params)
+        format.html { redirect_to @comment, notice: 'Comment was successfully updated.' }
+        format.json { render json: @comment }
+      else
+        format.html { render :new }
+        format.json { render json: @comment.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+  ```
+</details>
+
+#### Bonus
+
+* If you haven't already done so, implement the bonuses from earlier in the lesson
+  * Make it so that the JSON request to Comments#show only return `authorName`, `content`, `title` and `photoUrl`. No `created_at` or `updated_at`.
+  * Make it so that the JSON request to Comments#show also includes the grumble.
+  * Make it so that the artists received from JSON requests to Grumbles#index and Grumbles#show also include their comments
+* Make it so that when you delete a Grumble or Comment via Postman, you get a JSON object confirming that the Grumble or Comment has been deleted
+
+## Pro-Tip: `include`
+
+You'll notice that when we access a Grumble or Comment using our API, we don't see any information about their associations. So what would we do if, for example, every time we retrieve a Grumble we also want to see all the comments that belong to it? We can use Rails' `include` keyword to take care of that...
+
+> This hidden snippet contains the answer for some of the earlier bonuses, so only take a look once you've give them a shot...
+
+<details>
+  <summary><strong>How to use <code>include</code>...</strong></summary>
+
+  ```rb
+  def index
+    @grumbles = Grumble.all
+
+    respond_to do |format|
+      format.html { render :index }
+      format.json { render json: @grumbles, include: :comments }
+    end
+  end
+  ```
+
+  ```json
+  {
+    "id": 1,
+    "authorName": "Jesse",
+    "content": "It always seems impossible, until it's done.",
+    "title": "11 nerds wearing shoes",
+    "photoUrl": "https://splashbase.s3.amazonaws.com/snapwiresnaps/regular/tumblr_o3dxa7RePd1teue7jo1_1280.jpg",
+    "created_at": "2016-10-26T11:42:33.808Z",
+    "updated_at": "2016-10-26T11:42:33.808Z",
+    "comments": [
+      {
+        "id": 1,
+        "authorName": "Andy",
+        "content": "That photo reminds me of the time I saw an outgoing and lonely software engineer who is flatulently dueling a disgusting and bloated master of disguise.",
+        "grumble_id": 1,
+        "created_at": "2016-10-26T11:42:34.340Z",
+        "updated_at": "2016-10-26T11:42:34.340Z"
+      },
+      {
+        "id": 2,
+        "authorName": "Adam",
+        "content": "Who wrote this? It sounds like it was written by a snide, bloated, corrupt, and unethical Yeti in Nelson Mandela's jail cell in 1983.",
+        "grumble_id": 1,
+        "created_at": "2016-10-26T11:42:34.378Z",
+        "updated_at": "2016-10-26T11:42:34.378Z"
+      },
+      {
+        "id": 3,
+        "authorName": "Jesse",
+        "content": "I've responded to this in my post about a diseased mime who is rocking out on an air guitar with a blushing nerd.",
+        "grumble_id": 1,
+        "created_at": "2016-10-26T11:42:34.415Z",
+        "updated_at": "2016-10-26T11:42:34.415Z"
+      },
+      {
+        "id": 4,
+        "authorName": "Adam",
+        "content": "That photo reminds me of the time I saw a considerate Mafia don who is deceitfully voting.",
+        "grumble_id": 1,
+        "created_at": "2016-10-26T11:42:34.461Z",
+        "updated_at": "2016-10-26T11:42:34.461Z"
+      },
+      {
+        "id": 5,
+        "authorName": "Adam",
+        "content": "I feel like a more appropriate picture for this post would be a fat ghost who is carefully delivering pizza to a scrawny poker dealer.",
+        "grumble_id": 1,
+        "created_at": "2016-10-26T11:42:34.501Z",
+        "updated_at": "2016-10-26T11:42:34.501Z"
+      }
+    ]
+  }
+  ```
+</details>
+
+## Pro-Tip: CORS
+
+Chances are you might encounter some Cross-Origin errors when building an API for your Project 3. This is because your Rails API is not equipped to accept `POST` `PUT` or `DELETE` requests from sources (or "origins") other than itself. The Rack CORS gem is a useful tool in tackling that problem.
+
+#### [Rack CORS Repo & Documentation](https://github.com/cyu/rack-cors)
+
+## Closing / Questions
+
+## Resources
+
+* [Postman](https://www.getpostman.com/)
+* [How To Design APIs That Don't Suck](https://medium.freecodecamp.com/https-medium-com-anupcowkur-how-to-design-apis-that-dont-suck-922d864365c9#.xt50ofgco)
+* [Intro to APIs](https://zapier.com/learn/apis/chapter-1-introduction-to-apis/)
+* [Practice with APIs](https://github.com/ga-dc/weather_teller)
+
+------
+
+## Bonus: Accessing 3rd Party APIs Using Ruby
+
+What if we want to retrieve information from a 3rd party API from using Ruby? There are a few libraries that help with this, but the most popular of which is [HTTParty](https://github.com/jnunemaker/httparty).
+
+## Demo: HTTParty
+
+> No need to create a Rails app to run the below code. Just test it out in a lone app.rb file via the Terminal.
+
+#### [HTTParty Documentation](https://github.com/jnunemaker/httparty)
 
 After adding it to our Gemfile. We can start using it right away,
 
@@ -422,7 +588,7 @@ class Forecast
     @temp_f = response["current_observation"]["temp_f"]
     @weather = response["current_observation"]["weather"]
 
-    # storing arguments as instance varibles in the model
+    # storing arguments as instance variables in the model
     @city = city
     @state = state
   end
@@ -445,14 +611,3 @@ washington.weather
 ```
 
 > If you'd like to learn more about APIs and POROs, Andy has a [great blog post](http://andrewsunglaekim.github.io/Server-side-api-calls-wrapped-in-ruby-classes/) on the subject.
-
-You'll be doing this same sort of thing in much greater detail from the client-side during this afternoon's [AJAX lesson](https://github.com/ga-dc/curriculum/tree/master/07-apis-express-ajax/ajax)!  
-
-## Conclusion (5 minutes / 2:40)
-
-Review Learning Objectives
-
-## Resources:
-* [Postman](https://www.getpostman.com/)
-* [Intro to APIs](https://zapier.com/learn/apis/chapter-1-introduction-to-apis/)
-* [Practice with APIs](https://github.com/ga-dc/weather_teller)
