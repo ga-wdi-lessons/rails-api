@@ -449,6 +449,79 @@ Your turn. Make sure we can create and update Comments via requests that expect 
 
 ## Pro-Tip: `include`
 
+You'll notice that when we access a Grumble or Comment using our API, we don't see any information about their associations. So what would we do if, for example, every time we retrieve a Grumble we also want to see all the comments that belong to it? We can use Rails' `include` keyword to take care of that...
+
+> This hidden snippet contains the answer for some of the earlier bonuses, so only take a look once you've give them a shot...
+
+<details>
+  <summary><strong>How to use <code>include</code>...</strong></summary>
+
+  ```rb
+  def index
+    @grumbles = Grumble.all
+
+    respond_to do |format|
+      format.html { render :index }
+      format.json { render json: @grumbles, include: :comments }
+    end
+  end
+  ```
+
+  ```json
+  {
+    "id": 1,
+    "authorName": "Jesse",
+    "content": "It always seems impossible, until it's done.",
+    "title": "11 nerds wearing shoes",
+    "photoUrl": "https://splashbase.s3.amazonaws.com/snapwiresnaps/regular/tumblr_o3dxa7RePd1teue7jo1_1280.jpg",
+    "created_at": "2016-10-26T11:42:33.808Z",
+    "updated_at": "2016-10-26T11:42:33.808Z",
+    "comments": [
+      {
+        "id": 1,
+        "authorName": "Andy",
+        "content": "That photo reminds me of the time I saw an outgoing and lonely software engineer who is flatulently dueling a disgusting and bloated master of disguise.",
+        "grumble_id": 1,
+        "created_at": "2016-10-26T11:42:34.340Z",
+        "updated_at": "2016-10-26T11:42:34.340Z"
+      },
+      {
+        "id": 2,
+        "authorName": "Adam",
+        "content": "Who wrote this? It sounds like it was written by a snide, bloated, corrupt, and unethical Yeti in Nelson Mandela's jail cell in 1983.",
+        "grumble_id": 1,
+        "created_at": "2016-10-26T11:42:34.378Z",
+        "updated_at": "2016-10-26T11:42:34.378Z"
+      },
+      {
+        "id": 3,
+        "authorName": "Jesse",
+        "content": "I've responded to this in my post about a diseased mime who is rocking out on an air guitar with a blushing nerd.",
+        "grumble_id": 1,
+        "created_at": "2016-10-26T11:42:34.415Z",
+        "updated_at": "2016-10-26T11:42:34.415Z"
+      },
+      {
+        "id": 4,
+        "authorName": "Adam",
+        "content": "That photo reminds me of the time I saw a considerate Mafia don who is deceitfully voting.",
+        "grumble_id": 1,
+        "created_at": "2016-10-26T11:42:34.461Z",
+        "updated_at": "2016-10-26T11:42:34.461Z"
+      },
+      {
+        "id": 5,
+        "authorName": "Adam",
+        "content": "I feel like a more appropriate picture for this post would be a fat ghost who is carefully delivering pizza to a scrawny poker dealer.",
+        "grumble_id": 1,
+        "created_at": "2016-10-26T11:42:34.501Z",
+        "updated_at": "2016-10-26T11:42:34.501Z"
+      }
+    ]
+  }
+  ```
+</details>
+
 > FYI: You will encounter many different ways to go about "including" ActiveRecord objects in your JSON response on Stack Overflow.
 
 ## Pro-Tip: CORS
