@@ -526,6 +526,8 @@ You'll notice that when we access a Grumble or Comment using our API, we don't s
 
 ## Pro-Tip: CORS
 
+Chances are you might encounter some Cross-Origin errors when building an API for your Project 3. This is because your Rails API is not equipped to accept `POST` `PUT` or `DELETE` requests from sources (or "origins") other than itself. The Rack CORS gem is a useful tool in tackling that problem.
+
 #### [Rack CORS Repo & Documentation](https://github.com/cyu/rack-cors)
 
 ## Closing / Questions
