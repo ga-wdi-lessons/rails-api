@@ -224,7 +224,7 @@ Let's walk through the same process for `Grumbles#index`.
 
 > 10 minutes exercise. 5 minute review.
 
-It's your turn to do the same for Comments. You should be working in `songs_controller.rb` for this.
+It's your turn to do the same for Comments. You should be working in `comments_controller.rb` for this.
 
 <details>
   <summary><strong>Solution...</strong></summary>
@@ -330,7 +330,7 @@ If the save fails...
 
 How do we usually test this functionality in the browser? A form!  
 
-Today, we'll use Postman. It makes POSTing requests easy.
+But for this lesson, we're going to continue using Postman. Here's how you do it...
   1. Enter url: `localhost:3000/grumbles`  
   2. Method: POST  
   3. Under the "Headers" tab, add a `Content-Type` key with a value of `application/json`
@@ -347,8 +347,7 @@ Today, we'll use Postman. It makes POSTing requests easy.
     ```
   4. Press "Submit".  
 
-<!-- AM: Talk about what `Content-Type` is -->
-<!-- AM: Ask why we're wrapping the data in "artist" -->
+> `Content-Type` is indicating what type of data we are sending to the server - not what we are expecting back.
 
 ![Postman create error](http://imgur.com/YFJIShn.png)
 
@@ -450,11 +449,11 @@ Your turn. Make sure we can create and update Comments via requests that expect 
 
 ## Pro-Tip: `include`
 
-<!-- AM: Give an example of using include to display nested resources in API response -->
+> FYI: You will encounter many different ways to go about "including" ActiveRecord objects in your JSON response on Stack Overflow.
 
 ## Pro-Tip: CORS
 
-<!-- Provide some resources for CORS issues -->
+#### [Rack CORS Repo & Documentation](https://github.com/cyu/rack-cors)
 
 ## Closing / Questions
 
@@ -466,7 +465,7 @@ Your turn. Make sure we can create and update Comments via requests that expect 
 
 ------
 
-## Bonus: Accessing 3rd Party APIs using Ruby
+## Bonus: Accessing 3rd Party APIs Using Ruby
 
 What if we want to retrieve information from a 3rd party API from using Ruby? There are a few libraries that help with this, but the most popular of which is [HTTParty](https://github.com/jnunemaker/httparty).
 
