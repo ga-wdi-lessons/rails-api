@@ -86,6 +86,7 @@ Let's demonstrate using Grumblr. Clone down this [starter code](https://github.c
 $ git clone git@github.com:ga-wdi-exercises/grumblr_rails_api.git
 $ cd grumblr_rails_api
 $ git checkout wdi12-starter
+$ rails s
 ```
 
 Earlier we used an HTTP request to retrieve information from a 3rd party API. Under the hood, that API received a GET request in the exact same way that the Rails application we have build in class thus far have received GET requests.
@@ -522,8 +523,6 @@ You'll notice that when we access a Grumble or Comment using our API, we don't s
   ```
 </details>
 
-> FYI: You will encounter many different ways to go about "including" ActiveRecord objects in your JSON response on Stack Overflow.
-
 ## Pro-Tip: CORS
 
 Chances are you might encounter some Cross-Origin errors when building an API for your Project 3. This is because your Rails API is not equipped to accept `POST` `PUT` or `DELETE` requests from sources (or "origins") other than itself. The Rack CORS gem is a useful tool in tackling that problem.
@@ -535,6 +534,7 @@ Chances are you might encounter some Cross-Origin errors when building an API fo
 ## Resources
 
 * [Postman](https://www.getpostman.com/)
+* [How To Design APIs That Don't Suck](https://medium.freecodecamp.com/https-medium-com-anupcowkur-how-to-design-apis-that-dont-suck-922d864365c9#.xt50ofgco)
 * [Intro to APIs](https://zapier.com/learn/apis/chapter-1-introduction-to-apis/)
 * [Practice with APIs](https://github.com/ga-dc/weather_teller)
 
@@ -591,7 +591,7 @@ class Forecast
     @temp_f = response["current_observation"]["temp_f"]
     @weather = response["current_observation"]["weather"]
 
-    # storing arguments as instance varibles in the model
+    # storing arguments as instance variables in the model
     @city = city
     @state = state
   end
