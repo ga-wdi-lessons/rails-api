@@ -1,8 +1,3 @@
-<!-- Update screenshots -->
-<!-- Introduce "include" -->
-<!-- What is the update version of `status: :created` -->
-<!-- Add stylesheet -->
-
 # APIs
 
 ## Learning Objectives
@@ -80,14 +75,16 @@ And here's an example of an unsuccessful `403 Forbidden` API call. Why did it fa
 
 Today, we're going to use Rails to create our own API from which we can pull information. We will be using a familiar codebase, and modify it so that it can serve up data.  
 
-Let's demonstrate using Grumblr. Clone down this [starter code](https://github.com/ga-wdi-exercises/grumblr_rails_api/) and checkout the `wdi12-starter` branch...
+Let's demonstrate using Grumblr. Clone down this [starter code](https://github.com/ga-wdi-exercises/grumblr_rails_api/) and checkout the `api-starter` branch...
 
 ```bash
 $ git clone git@github.com:ga-wdi-exercises/grumblr_rails_api.git
 $ cd grumblr_rails_api
-$ git checkout wdi12-starter
+$ git checkout api-starter
 $ rails s
 ```
+
+> The solution to today's code is available on the `api-solution` branch
 
 Earlier we used an HTTP request to retrieve information from a 3rd party API. Under the hood, that API received a GET request in the exact same way that the Rails application we have build in class thus far have received GET requests.
 * All the requests that our Rails application can receive are listed when we run `rake routes` in the Terminal. We create RESTful routes and corresponding controller actions that respond to `GET` `POST` `PATCH` `PUT` and `DELETE` requests.
