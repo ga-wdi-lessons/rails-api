@@ -9,9 +9,9 @@
 
 ## Framing
 
-In this lesson you will learn how to build a Rails API from the scratch and create a back-end that serves up JSON, in addition the usual HTML views. We will be focusing almost entirely on the back-end itself. To test our API, we will be using a very useful program called Postman.
+In this lesson you will learn how to build a Rails API from scratch and create a back-end that serves up JSON, in addition the usual HTML views. We will be focusing almost entirely on the back-end itself. To test our API, we will be using a very useful program called Postman.
 
-## Introducing APIs (5 minutes / 0:05)
+## APIs (5 minutes / 0:05)
 
 <details>
   <summary><strong>What is an API?</strong></summary>
@@ -23,7 +23,7 @@ In this lesson you will learn how to build a Rails API from the scratch and crea
 <details>
   <summary><strong>How can we go about accessing an API within our programs?</strong></summary>
 
-  > Using jQuery's AJAX method, Angular's ngResource or some other equivalent.
+  > Using jQuery's AJAX method, Angular's ngResource, or a library for requests & promises like axios, for example.
 
 </details>
 
@@ -91,7 +91,7 @@ $ rails s
 
 > The solution to today's code is available on the `api-solution` branch
 
-Earlier we used an HTTP request to retrieve information from omdbapi.com, a 3rd party API. Under the hood, that API received a GET request in the exact same way that the Rails application we have build in class thus far have received GET requests.
+Earlier we used Postman to make an HTTP request to retrieve information from omdbapi.com, a 3rd party API. Under the hood, that API received a GET request in the exact same way that the Rails application we have built in class thus far have received GET requests.
 * All the requests that our Rails application can receive are listed when we run `rails routes` in the Terminal. We create RESTful routes and corresponding controller actions that respond to `GET` `POST` `PATCH` `PUT` and `DELETE` requests.
 
 ```bash
