@@ -81,12 +81,14 @@ Let's demonstrate using Grumblr. Clone down this [starter code](https://github.c
 $ git clone git@github.com:ga-wdi-exercises/grumblr_rails_api.git
 $ cd grumblr_rails_api
 $ git checkout api-starter
+$ bundle install
+$ rails db:create db:migrate db:seed
 $ rails s
 ```
 
 > The solution to today's code is available on the `api-solution` branch
 
-Earlier we used an HTTP request to retrieve information from a 3rd party API. Under the hood, that API received a GET request in the exact same way that the Rails application we have build in class thus far have received GET requests.
+Earlier we used an HTTP request to retrieve information from omdbapi.com, a 3rd party API. Under the hood, that API received a GET request in the exact same way that the Rails application we have build in class thus far have received GET requests.
 * All the requests that our Rails application can receive are listed when we run `rake routes` in the Terminal. We create RESTful routes and corresponding controller actions that respond to `GET` `POST` `PATCH` `PUT` and `DELETE` requests.
 
 ```bash
@@ -347,7 +349,9 @@ But for this lesson, we're going to continue using Postman. Here's how you do it
 
 > `Content-Type` is indicating what type of data we are sending to the server - not what we are expecting back.
 
-![Postman create error](http://imgur.com/YFJIShn.png)
+![Postman POST header](./images/POST_req_header.png)
+![Postman POST body](./images/POST_req_body.png)
+![Postman create error](./images/CSRF_exception.png)
 
 The raw response from this request is an error page, rendered as html. Sometimes you just have to wade through the html. Scroll down until you get to the "body".
 
@@ -376,7 +380,7 @@ end
 
 Success should look like this...
 
-![Create Grumble 200 OK in Postman](http://i.imgur.com/7bncv7w.png)
+![Create Grumble 200 OK in Postman](./images/POST_res_json.png)
 
 We should now get a `200` response code signifying a successful `POST` request and we can preview the html page sent back as the response (our newly created artist's show page)
 
