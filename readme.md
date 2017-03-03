@@ -3,14 +3,15 @@
 ## Learning Objectives
 
 - Describe what an API is, and why we might use one.
-- Describe the purpose and syntax of `respond_to`
+- Use Postman to test an API.
+- Describe the purpose and syntax of `respond_to`.
 - Make a Rails app that provides a JSON API.
 
 ## Framing
 
-Yesterday afternoon you learned how to use Angular and `ngResource` to communicate with an API. In particular, you performed CRUD actions on a Grumblr API the instructors made for you. This morning you will learn how to build a Rails API from the ground up and create a back-end that serves up JSON along with the usual HTML views.
+In this lesson you will learn how to build a Rails API from the scratch and create a back-end that serves up JSON, in addition the usual HTML views. We will be focusing almost entirely on the back-end itself. To test our API, we will be using a very useful program called Postman.
 
-## A Quick Refresher (5 minutes / 0:05)
+## Introducing APIs (5 minutes / 0:05)
 
 <details>
   <summary><strong>What is an API?</strong></summary>
@@ -20,7 +21,7 @@ Yesterday afternoon you learned how to use Angular and `ngResource` to communica
 </details>
 
 <details>
-  <summary><strong>How can we go about accessing an API programmatically?</strong></summary>
+  <summary><strong>How can we go about accessing an API within our programs?</strong></summary>
 
   > Using jQuery's AJAX method, Angular's ngResource or some other equivalent.
 
@@ -37,7 +38,7 @@ Yesterday afternoon you learned how to use Angular and `ngResource` to communica
 
 > 3 minutes exercise. 2 minutes review.
 
-We spent some time earlier this week accessing a couple 3rd party APIs. What we haven't done yet, however, is focus on how different APIs can be.
+We will spend some time accessing a couple 3rd party APIs. APIs vary quite a bit in their purposes and configurations. To get a sense of that, let's take a look at a few different APIs.
 
 Form pairs and explore the API links in the below table. Record any observations that come to mind. In particular, think about what you see in the URL and the API response itself.
 
