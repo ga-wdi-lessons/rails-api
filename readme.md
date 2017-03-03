@@ -92,7 +92,7 @@ $ rails s
 > The solution to today's code is available on the `api-solution` branch
 
 Earlier we used an HTTP request to retrieve information from omdbapi.com, a 3rd party API. Under the hood, that API received a GET request in the exact same way that the Rails application we have build in class thus far have received GET requests.
-* All the requests that our Rails application can receive are listed when we run `rake routes` in the Terminal. We create RESTful routes and corresponding controller actions that respond to `GET` `POST` `PATCH` `PUT` and `DELETE` requests.
+* All the requests that our Rails application can receive are listed when we run `rails routes` in the Terminal. We create RESTful routes and corresponding controller actions that respond to `GET` `POST` `PATCH` `PUT` and `DELETE` requests.
 
 ```bash
 Prefix Verb           URI Pattern                                              Controller#Action
@@ -147,9 +147,9 @@ In particular, we want `/grumbles/4.json` to return something like this...
 }
 ```
 
-Why `.json`? Check out `rake routes`...
+Why `.json`? Check out `rails routes`...
 
-``` ruby
+```bash
 Prefix    Verb  URI Pattern               Controller#Action
 grumble   GET   /grumbles/:id(.:format)   grumbles#show
 ```
