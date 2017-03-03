@@ -3,14 +3,15 @@
 ## Learning Objectives
 
 - Describe what an API is, and why we might use one.
-- Describe the purpose and syntax of `respond_to`
+- Use Postman to test an API.
+- Describe the purpose and syntax of `respond_to`.
 - Make a Rails app that provides a JSON API.
 
 ## Framing
 
-Yesterday afternoon you learned how to use Angular and `ngResource` to communicate with an API. In particular, you performed CRUD actions on a Grumblr API the instructors made for you. This morning you will learn how to build a Rails API from the ground up and create a back-end that serves up JSON along with the usual HTML views.
+In this lesson you will learn how to build a Rails API from scratch and create a back-end that serves up JSON, in addition the usual HTML views. We will be focusing almost entirely on the back-end itself. To test our API, we will be using a very useful program called Postman.
 
-## A Quick Refresher (5 minutes / 0:05)
+## APIs (5 minutes / 0:05)
 
 <details>
   <summary><strong>What is an API?</strong></summary>
@@ -20,9 +21,9 @@ Yesterday afternoon you learned how to use Angular and `ngResource` to communica
 </details>
 
 <details>
-  <summary><strong>How can we go about accessing an API programmatically?</strong></summary>
+  <summary><strong>How can we go about accessing an API within our programs?</strong></summary>
 
-  > Using jQuery's AJAX method, Angular's ngResource or some other equivalent.
+  > Using jQuery's AJAX method, Angular's ngResource, or a library for requests & promises like axios, for example.
 
 </details>
 
@@ -37,7 +38,7 @@ Yesterday afternoon you learned how to use Angular and `ngResource` to communica
 
 > 3 minutes exercise. 2 minutes review.
 
-We spent some time earlier this week accessing a couple 3rd party APIs. What we haven't done yet, however, is focus on how different APIs can be.
+We will spend some time accessing a couple 3rd party APIs. APIs vary quite a bit in their purposes and configurations. To get a sense of that, let's take a look at a few different APIs.
 
 Form pairs and explore the API links in the below table. Record any observations that come to mind. In particular, think about what you see in the URL and the API response itself.
 
@@ -49,6 +50,8 @@ Form pairs and explore the API links in the below table. Record any observations
 | **[OMDB API](http://www.omdbapi.com/)** | http://www.omdbapi.com/?t=Game%20of%20Thrones&Season=1 |
 | **[StarWars](http://swapi.co/)** | http://swapi.co/api/people/3 |
 | **[Stocks](http://dev.markitondemand.com/MODApis/)** | http://dev.markitondemand.com/Api/Quote/json?symbol=AAPL |
+
+The raw, unformatted JSON output that comes back from an API can be formatted by [this Chrome Extension, JSON Formatter](https://chrome.google.com/webstore/detail/json-formatter/bcjindcccaagfpapjjmafapmmgkkhgoa?hl=en)
 
 ## A Closer Look at an API Request (5 minutes / 0:15)
 
@@ -81,13 +84,15 @@ Let's demonstrate using Grumblr. Clone down this [starter code](https://github.c
 $ git clone git@github.com:ga-wdi-exercises/grumblr_rails_api.git
 $ cd grumblr_rails_api
 $ git checkout api-starter
+$ bundle install
+$ rails db:create db:migrate db:seed
 $ rails s
 ```
 
 > The solution to today's code is available on the `api-solution` branch
 
-Earlier we used an HTTP request to retrieve information from a 3rd party API. Under the hood, that API received a GET request in the exact same way that the Rails application we have build in class thus far have received GET requests.
-* All the requests that our Rails application can receive are listed when we run `rake routes` in the Terminal. We create RESTful routes and corresponding controller actions that respond to `GET` `POST` `PATCH` `PUT` and `DELETE` requests.
+Earlier we used Postman to make an HTTP request to retrieve information from omdbapi.com, a 3rd party API. Under the hood, that API received a GET request in the exact same way that the Rails application we have built in class thus far have received GET requests.
+* All the requests that our Rails application can receive are listed when we run `rails routes` in the Terminal. We create RESTful routes and corresponding controller actions that respond to `GET` `POST` `PATCH` `PUT` and `DELETE` requests.
 
 ```bash
 Prefix Verb           URI Pattern                                              Controller#Action
@@ -142,9 +147,9 @@ In particular, we want `/grumbles/4.json` to return something like this...
 }
 ```
 
-Why `.json`? Check out `rake routes`...
+Why `.json`? Check out `rails routes`...
 
-``` ruby
+```bash
 Prefix    Verb  URI Pattern               Controller#Action
 grumble   GET   /grumbles/:id(.:format)   grumbles#show
 ```
@@ -347,7 +352,9 @@ But for this lesson, we're going to continue using Postman. Here's how you do it
 
 > `Content-Type` is indicating what type of data we are sending to the server - not what we are expecting back.
 
-![Postman create error](http://imgur.com/YFJIShn.png)
+![Postman POST header](./images/POST_req_header.png)
+![Postman POST body](./images/POST_req_body.png)
+![Postman create error](./images/CSRF_exception.png)
 
 The raw response from this request is an error page, rendered as html. Sometimes you just have to wade through the html. Scroll down until you get to the "body".
 
@@ -376,7 +383,7 @@ end
 
 Success should look like this...
 
-![Create Grumble 200 OK in Postman](http://i.imgur.com/7bncv7w.png)
+![Create Grumble 200 OK in Postman](./images/POST_res_json.png)
 
 We should now get a `200` response code signifying a successful `POST` request and we can preview the html page sent back as the response (our newly created artist's show page)
 
