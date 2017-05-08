@@ -1,4 +1,4 @@
-# APIs
+# Rails API
 
 ## Learning Objectives
 
@@ -30,7 +30,28 @@ In this lesson you will learn how to build a Rails API from scratch and create a
 <details>
   <summary><strong>What information do we need to provide in order to be able to retrieve information from an API? What about for modifying data in an API?</strong></summary>
 
-  > In order to "GET" or "DELETE" information, we need to provide a `url` `type` (HTTP method) and `dataType` (API data format). > In order to "POST" or "PUT", we also need to provide some `data`.
+  > In order to "GET" or "DELETE" information, we need to provide a `url`, `type`, (HTTP method) and `dataType` (API data format). > In order to "POST" or "PUT", we also need to provide some `data`.
+
+  > Example:
+
+  ```js
+  $.ajax({
+    type: 'POST',
+    data: {
+      artist: {
+        name: "Limp Bizkit",
+        nationality: "USA",
+        photo_url: "http://nerdist.com/wp-content/uploads/2014/12/limp_bizkit-970x545.jpg"
+      }
+    },
+    dataType: 'json',
+    url: "/artists"
+  }).done((response) =>  {
+    console.log(response);
+  }).fail((response) => {
+    console.log("AJAX POST failed");
+  })
+  ```
 
 </details>
 
@@ -68,9 +89,6 @@ Here's an example of a successful `200 OK` API call...
 
 ![Postman screenshot success](http://i.imgur.com/2TADr4J.png)
 
-And here's an example of an unsuccessful `403 Forbidden` API call. Why did it fail?
-
-![Postman screenshot fail](http://i.imgur.com/r3nIhGH.png)
 
 ## Rails and JSON
 
@@ -92,7 +110,7 @@ $ rails s
 > The solution to today's code is available on the `api-solution` branch
 
 Earlier we used Postman to make an HTTP request to retrieve information from omdbapi.com, a 3rd party API. Under the hood, that API received a GET request in the exact same way that the Rails application we have built in class thus far have received GET requests.
-* All the requests that our Rails application can receive are listed when we run `rails routes` in the Terminal. We create RESTful routes and corresponding controller actions that respond to `GET` `POST` `PATCH` `PUT` and `DELETE` requests.
+> All the requests that our Rails application can receive are listed when we run `rails routes` in the Terminal. We create RESTful routes and corresponding controller actions that respond to `GET` `POST` `PATCH` `PUT` and `DELETE` requests.
 
 ```bash
 Prefix Verb           URI Pattern                                              Controller#Action
@@ -160,9 +178,7 @@ Requesting "GET" from Postman, using `http://localhost:3000/grumbles/3.json` as 
 
 HTML? Let's test that url in our browser. What error do we see?
 
-![Missing template](http://i.imgur.com/4cWDzVU.png)
-
-> The important bits are `Missing template grumbles/show` and `:formats=>[:json]`
+![Missing template](images/missing_template.png)
 
 Rails is expecting a JSON formatted response. Let's fix this by adding some lines to our show action in our controller.
 
@@ -262,7 +278,7 @@ It's your turn to do the same for Comments. You should be working in `comments_c
 
 * Make it so that the JSON request to Comments#show only return `authorName`, `content`, `title` and `photoUrl`. No `created_at` or `updated_at`.
 * Make it so that the JSON request to Comments#show also includes the grumble.
-* Make it so that the artists received from JSON requests to Grumbles#index and Grumbles#show also include their comments
+* Make it so that the responses received from JSON requests to Grumbles#index and Grumbles#show also include their comments
 
 > All of these will require some Googling.
 
@@ -312,7 +328,7 @@ def create
   respond_to do |format|
     if @grumble.save!
       format.html { redirect_to @grumble, notice: 'Grumble was successfully created.' }
-      format.json { render json: @grumble, status: :created, location: @grumble }
+      fosrmat.json { render json: @grumble, status: :created, location: @grumble }
     else
       format.html { render :new }
       format.json { render json: @grumble.errors, status: :unprocessable_entity }
