@@ -342,7 +342,7 @@ But for this lesson, we're going to continue using Postman. Here's how you do it
   2. Method: POST  
   3. Under the "Headers" tab in the request section, add a `Content-Type` key with a value of `application/json`
   3. Add your Grumble data to "Body".  
-    ```json
+    ```
     {
       "grumble": {
         "authorName": "Jesse",
