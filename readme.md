@@ -239,8 +239,6 @@ Let's walk through the same process for `Grumbles#index`.
 
 ## You Do: Comments#index and Comments#show (15 minutes / 0:55)
 
-> 10 minutes exercise. 5 minute review.
-
 It's your turn to do the same for Comments. You should be working in `comments_controller.rb` for this.
 
 <details>
@@ -396,8 +394,6 @@ We should now get a `200` response code signifying a successful `POST` request a
 ## Break (10 minutes / 1:45)
 
 ## You Do: Comments#create, Comments#update (15 minutes / 2:00)
-
-> 10 minutes exercise. 5 minutes review.
 
 Your turn. Make sure we can create and update Comments via requests that expect JSON.
 
