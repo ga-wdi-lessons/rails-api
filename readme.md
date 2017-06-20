@@ -78,7 +78,7 @@ The raw, unformatted JSON output that comes back from an API can be formatted by
 
 Let's make a basic HTTP request to an API. While we can do this in the browser, we're going to use Postman - a Chrome plug-in for making HTTP requests - so we can not only look at it in more detail, but also make `POST` `PUT` and `DELETE` from the browser without building an app.  
 
-#### Postman Setup
+#### You Do: Postman Setup
 
 1. [Download Postman](https://www.getpostman.com/).  
 2. Type in the "url" of an API call.  
