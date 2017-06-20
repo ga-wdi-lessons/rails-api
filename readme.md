@@ -68,7 +68,7 @@ Form pairs and explore the API links in the below table. Record any observations
 | **[This for That](http://itsthisforthat.com/)** | http://itsthisforthat.com/api.php?json |
 | **[iTunes](https://www.apple.com/itunes/affiliates/resources/documentation/itunes-store-web-service-search-api.html)** | http://itunes.apple.com/search?term=adele |
 | **[Giphy](https://github.com/Giphy/GiphyAPI)** | http://api.giphy.com/v1/gifs/search?q=funny+cat&api_key=dc6zaTOxFJmzC |
-| **[OMDB API](http://www.omdbapi.com/)** | http://www.omdbapi.com/?t=Game%20of%20Thrones&Season=1 |
+| **[TV Maze](http://api.tvmaze.com/)** | http://api.tvmaze.com/search/shows?q=westworld|
 | **[StarWars](http://swapi.co/)** | http://swapi.co/api/people/3 |
 | **[Stocks](http://dev.markitondemand.com/MODApis/)** | http://dev.markitondemand.com/Api/Quote/json?symbol=AAPL |
 
@@ -99,11 +99,11 @@ Today, we're going to use Rails to create our own API from which we can pull inf
 Let's demonstrate using Grumblr. Clone down this [starter code](https://github.com/ga-wdi-exercises/grumblr_rails_api/) and checkout the `api-starter` branch...
 
 ```bash
-$ git clone git@github.com:ga-wdi-exercises/grumblr_rails_api.git
+$ git clone https://github.com/ga-wdi-exercises/grumblr_rails_api.git
 $ cd grumblr_rails_api
 $ git checkout api-starter
 $ bundle install
-$ rails db:create db:migrate db:seed
+$ rails db:drop db:create db:migrate db:seed
 $ rails s
 ```
 
@@ -135,7 +135,6 @@ root                  GET    /                                                 r
 
 There's something under the `URI Pattern` column we haven't talked about much yet: **`.:format`**
 * Resources can be represented by many formats. Rails defaults to `:html`. But it can easily respond with `:json`, `:csv`, `:xml` and others.
-* Which format have we dealt with primarily so far?
 * Which format do we need our application to render in order to have a functional API?
 
 ## I Do: Grumblr grumbles#show (10 minutes / 0:35)
@@ -213,7 +212,6 @@ end
 
 > If the request format is html, render the show view (show.html.erb). If the request format is JSON, render the data stored in `@grumble` as JSON.
 >
-> Note the nested JSON objects.
 
 Let's demo this in the browser and Postman.
 
@@ -274,14 +272,6 @@ It's your turn to do the same for Comments. You should be working in `comments_c
 
 </details>
 
-#### Bonus
-
-* Make it so that the JSON request to Comments#show only return `authorName`, `content`, `title` and `photoUrl`. No `created_at` or `updated_at`.
-* Make it so that the JSON request to Comments#show also includes the grumble.
-* Make it so that the responses received from JSON requests to Grumbles#index and Grumbles#show also include their comments
-
-> All of these will require some Googling.
-
 ## Break (10 minutes / 1:05)
 
 ## I Do: Grumbles#create (30 minutes / 1:35)
@@ -328,7 +318,7 @@ def create
   respond_to do |format|
     if @grumble.save!
       format.html { redirect_to @grumble, notice: 'Grumble was successfully created.' }
-      fosrmat.json { render json: @grumble, status: :created, location: @grumble }
+      format.json { render json: @grumble, status: :created, location: @grumble }
     else
       format.html { render :new }
       format.json { render json: @grumble.errors, status: :unprocessable_entity }
@@ -350,10 +340,10 @@ If the save fails...
 How do we usually test this functionality in the browser? A form!  
 
 But for this lesson, we're going to continue using Postman. Here's how you do it...
-  1. Enter url: `localhost:3000/grumbles`  
+  1. Enter url: `localhost:3000/grumbles.json`  
   2. Method: POST  
-  3. Under the "Headers" tab, add a `Content-Type` key with a value of `application/json`
-  3. Add your Grumble data to "Request Body".  
+  3. Under the "Headers" tab in the request section, add a `Content-Type` key with a value of `application/json`
+  3. Add your Grumble data to "Body".  
     ```json
     {
       "grumble": {
@@ -462,7 +452,6 @@ Your turn. Make sure we can create and update Comments via requests that expect 
 
 #### Bonus
 
-* If you haven't already done so, implement the bonuses from earlier in the lesson
   * Make it so that the JSON request to Comments#show only return `authorName`, `content`, `title` and `photoUrl`. No `created_at` or `updated_at`.
   * Make it so that the JSON request to Comments#show also includes the grumble.
   * Make it so that the artists received from JSON requests to Grumbles#index and Grumbles#show also include their comments
