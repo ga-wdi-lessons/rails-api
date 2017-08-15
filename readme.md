@@ -87,7 +87,7 @@ Let's make a basic HTTP request to an API. While we can do this in the browser, 
 
 Here's an example of a successful `200 OK` API call...
 
-![Postman screenshot success](http://i.imgur.com/2TADr4J.png)
+![Postman screenshot success](images/postman_success.png)
 
 
 ## Rails and JSON
