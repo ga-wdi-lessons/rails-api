@@ -109,7 +109,7 @@ $ rails s
 
 > The solution to today's code is available on the `api-solution` branch
 
-Earlier we used Postman to make an HTTP request to retrieve information from omdbapi.com, a 3rd party API. Under the hood, that API received a GET request in the exact same way that the Rails application we have built in class thus far have received GET requests.
+Earlier we used Postman to make an HTTP request to retrieve information from tvmaze.com, a 3rd party API. Under the hood, that API received a GET request in the exact same way that the Rails application we have built in class thus far have received GET requests.
 > All the requests that our Rails application can receive are listed when we run `rails routes` in the Terminal. We create RESTful routes and corresponding controller actions that respond to `GET` `POST` `PATCH` `PUT` and `DELETE` requests.
 
 ```bash
@@ -435,7 +435,7 @@ Your turn. Make sure we can create and update Comments via requests that expect 
 
     respond_to do |format|
       if @comment.update!(comment_params)
-        format.html { redirect_to @comment, notice: 'Comment was successfully updated.' }
+        format.html { redirect_to [@grumble, @comment], notice: 'Comment was successfully updated.' }
         format.json { render json: @comment }
       else
         format.html { render :new }
